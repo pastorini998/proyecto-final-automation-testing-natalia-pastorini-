@@ -1,4 +1,4 @@
-# proyecto-final-automation-testing--natalia-pastorini-
+# proyecto-final-automation-testing-natalia-pastorini
 #El propósito del proyecto
 
 Las tecnologías utilizadas
