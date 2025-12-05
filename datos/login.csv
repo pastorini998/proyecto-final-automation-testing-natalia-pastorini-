@@ -1,7 +1,4 @@
-usuario,clave,debe_funcionar,descripcion
-standard_user,secret_sauce,True,Usuario estándar válido
-locked_out_user,secret_sauce,False,Usuario bloqueado por el sistema
-problem_user,secret_sauce,True,Usuario con problemas de UI
-performance_glitch_user,secret_sauce,True,Usuario con lentitud simulada
-standard_user,password_incorrecto,False,Usuario válido con contraseña incorrecta
-usuario_inexistente,secret_sauce,False,Usuario que no existe
+usuario,password,resultado_esperado,mensaje_error
+standard_user,secret_sauce,inventory.html,
+locked_out_user,secret_sauce,,locked out
+problem_user,secret_sauce,inventory.html,

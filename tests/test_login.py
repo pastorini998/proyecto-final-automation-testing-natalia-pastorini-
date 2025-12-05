@@ -1,19 +1,21 @@
-import pytest
 from pages.login_page import LoginPage
-from utils.datos import leer_csv_login
+import pytest
 
-# Cargar datos del CSV
-CASOS_LOGIN = leer_csv_login('datos/login.csv')
-
-@pytest.mark.parametrize("usuario, clave, debe_funcionar", CASOS_LOGIN)
-def test_login_desde_csv(driver, usuario, clave, debe_funcionar):
-    login = LoginPage(driver)
-    login.abrir()
-    login.completar_usuario(usuario)
-    login.completar_clave(clave)
-    login.enviar()
+def test_login_exitoso(driver):
+    # 1. Navegar
+    driver.get("[https://www.saucedemo.com/](https://www.saucedemo.com/)")
     
-    if debe_funcionar:
-        assert "inventory.html" in driver.current_url
-    else:
-        assert login.hay_error()
+    # 2. Interactuar
+    login_page = LoginPage(driver)
+    login_page.login("standard_user", "secret_sauce")
+    
+    # 3. Validar (Assert)
+    assert "inventory.html" in driver.current_url, "No se redirigió al inventario"
+
+def test_login_fallido(driver):
+    driver.get("[https://www.saucedemo.com/](https://www.saucedemo.com/)")
+    
+    login_page = LoginPage(driver)
+    login_page.login("locked_out_user", "secret_sauce")
+    
+    assert "locked out" in login_page.get_error_message()
