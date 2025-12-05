@@ -28,7 +28,7 @@ def driver():
     #Cerrar Chrome después del test
     driver.quit()
 
-# --- HOOK PARA SCREENSHOTS (Clase 13) ---
+# hook screenshots
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """
@@ -41,14 +41,14 @@ def pytest_runtest_makereport(item, call):
         # Busca el driver dentro del test
         driver = item.funcargs.get('driver')
         if driver:
-            # Crea la carpeta de reportes si no existe
+            # crea la carpeta de reportes
             report_dir = pathlib.Path('reports/screens')
             report_dir.mkdir(parents=True, exist_ok=True)
             
-            # Nombre del archivo basado en el nombre del test
+            # Nombre de la captura
             file_name = report_dir / f"{item.name}.png"
             driver.save_screenshot(str(file_name))
             
-            # Adjunta al reporte HTML
+            # Adjunta la captura al reporte html
             if hasattr(report, 'extra'):
                 report.extra.append({'name': 'Screenshot', 'format': 'image', 'content': str(file_name)})

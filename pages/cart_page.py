@@ -2,7 +2,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+#clase carrito
 class CartPage:
+    
     URL_CURRENT = '/cart.html'
     CHECKOUT_BUTTON = (By.ID, 'checkout')
     CONTINUE_SHOPPING_BUTTON = (By.ID, 'continue-shopping')
