@@ -1,19 +1,33 @@
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from utils.helpers import URL
 from selenium.webdriver.common.by import By
-from pages.base_page import BasePage
 
-class LoginPage(BasePage):
-    # Selectores (Locators)
-    USERNAME_INPUT = (By.ID, "user-name")
-    PASSWORD_INPUT = (By.ID, "password")
-    LOGIN_BUTTON = (By.ID, "login-button")
-    ERROR_MESSAGE = (By.CSS_SELECTOR, "h3[data-test='error']")
 
-    # Acciones
-    def click_login(self, username, password):
-        self.enter_text(self.USERNAME_INPUT, username)
-        self.enter_text(self.PASSWORD_INPUT, password)
-        self.click(self.LOGIN_BUTTON)
-        self.driver.find_element(*self._LOGIN_BUTTON).click()
-    
-    def get_error_message(self):
-        return self.get_text(self.ERROR_MESSAGE)
+class LoginPage:
+
+    _INPUT_NAME = (By.NAME, 'user-name')
+    _INPUT_PASSWORD = (By.NAME, 'password')
+    _LOGIN_BUTTON = (By.NAME, 'login-button')
+
+    def __init__(self , driver):
+        self.driver = driver
+
+    def open( self):
+        self.driver.get(URL)
+
+
+    def login(self , username , password ):
+
+        WebDriverWait(self.driver,5).until(
+            EC.element_to_be_clickable(self._INPUT_NAME)
+        ).send_keys(username)
+
+        WebDriverWait(self.driver,5).until(
+            EC.element_to_be_clickable(self._INPUT_PASSWORD)
+        ).send_keys(password)
+
+        WebDriverWait(self.driver,5).until(
+            EC.element_to_be_clickable(self._LOGIN_BUTTON)
+        ).click()
+        

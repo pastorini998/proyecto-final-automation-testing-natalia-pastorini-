@@ -1,21 +1,18 @@
-from pages.login_page import LoginPage
 import pytest
+from pages.login_page import LoginPage
+from data import CASOS_LOGIN
+from utils import  get_login_csv
+from utils import get_login_faker
 
-def test_login_exitoso(driver):
-    # 1. Navegar
-    driver.get("[https://www.saucedemo.com/](https://www.saucedemo.com/)")
-    
-    # 2. Interactuar
-    login_page = LoginPage(driver)
-    login_page.login("standard_user", "secret_sauce")
-    
-    # 3. Validar (Assert)
-    assert "inventory.html" in driver.current_url, "No se redirigió al inventario"
 
-def test_login_fallido(driver):
-    driver.get("[https://www.saucedemo.com/](https://www.saucedemo.com/)")
-    
-    login_page = LoginPage(driver)
-    login_page.login("locked_out_user", "secret_sauce")
-    
-    assert "locked out" in login_page.get_error_message()
+@pytest.mark.parametrize("username,password,login_bool",CASOS_LOGIN)
+def test_login( driver, username , password , login_bool ):
+    #crear objeto (instanciarlo)
+    loginPage = LoginPage(driver) 
+    loginPage.open()
+    loginPage.login(username , password)
+
+    if login_bool:
+        assert "inventory.html" in driver.current_url
+    else:
+        assert "inventory.html" not in driver.current_url
