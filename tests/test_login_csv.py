@@ -1,36 +1,38 @@
 import pytest
-from pages.login_page import LoginPage #recibe info de logueo
+import csv
+from pages.login_page import LoginPage
 
-CASOS_LOGIN = [
-    ("standard_user", "secret_sauce", True, "Usuario valido"),
-    ("locked_out_user", "secret_sauce", False, "Usuario bloqueado"),
-    ("problem_user", "secret_sauce", True, "Problema visual"),
-    ("usuario_invalido", "clave_erronea", False, "Datos invalidos")
-]
+# --- Función para leer el CSV ---
+def obtener_datos_csv():
+    datos = []
+    try:
+        with open('login.csv', newline='', encoding='utf-8') as csvfile:
+            lector = csv.reader(csvfile)
+            next(lector) 
+            for fila in lector:
+                # fila = [usuario, clave, resultado, descripcion]
+                es_valido = fila[4] == "True"  # Convertir texto a booleano
+                datos.append((fila, fila[1], es_valido, fila[5]))
+    except FileNotFoundError:
+        print("ERROR: No se encuentra el archivo login.csv")
+    return datos
 
-@pytest.mark.parametrize("usuario, clave, debe_funcionar, descripcion", CASOS_LOGIN)
-def test_login_desde_csv(driver, usuario, clave, debe_funcionar, descripcion):
-    
+@pytest.mark.smoke
+@pytest.mark.parametrize("usuario, clave, debe_funcionar, descripcion", obtener_datos_csv())
+def test_login_csv(driver, usuario, clave, debe_funcionar, descripcion):
+    # 1. Instanciar y abrir
     login = LoginPage(driver)
-    login.click()
+    login.abrir()
     
-    # Logueo usuario contraseña click button
+    # 2. Acciones
     login.completar_usuario(usuario)
     login.completar_clave(clave)
     login.click_login()
     
-    #Validación
+    # 3. Validaciones
     if debe_funcionar:
-        assert "inventory.html" in driver.current_url, f"Fallo: {descripcion}"
+        assert "inventory.html" in driver.current_url, f"Fallo login valido: {descripcion}"
     else:
         error = login.obtener_mensaje_error()
-        assert "sadface" in error, f"El mensaje de error no fue el esperado. Recibido: {error}"
-
-@pytest.mark.smoke
-def test_login_usuario_valido_smoke(driver):
-    login = LoginPage(driver)
-    login.abrir()
-    login.completar_usuario("standard_user")
-    login.completar_clave("secret_sauce")
-    login.click_login()
-    assert "inventory.html" in driver.current_url
+        # Buscamos 'sadface' (error genérico) o 'locked out' (usuario bloqueado)
+        assert "sadface" in error or "locked out" in error, f"Error inesperado: {error}"
