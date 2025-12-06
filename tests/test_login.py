@@ -1,8 +1,13 @@
 import pytest
+import csv
+from pathlib import Path
 from pages.login_page import LoginPage
-from data import CASOS_LOGIN
-from utils import  get_login_csv
-from utils import get_login_faker
+from data.data_login import CASOS_LOGIN
+from utils.datos import  leer_csv_login
+from utils.faker import get_login_faker
+ 
+
+
 
 
 @pytest.mark.parametrize("username,password,login_bool",CASOS_LOGIN)
