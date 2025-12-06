@@ -1,4 +1,7 @@
-usuario,password,resultado_esperado,mensaje_error
-standard_user,secret_sauce,inventory.html,
-locked_out_user,secret_sauce,,locked out
-problem_user,secret_sauce,inventory.html,
+
+[
+    [usuario,password,resultado_esperado,mensaje_error]
+    [standard_user,secret_sauce,inventory.html,]
+    [locked_out_user,secret_sauce,,locked out]
+    [problem_user,secret_sauce,inventory.html,]
+]
